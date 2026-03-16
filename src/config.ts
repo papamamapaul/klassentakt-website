@@ -1,5 +1,10 @@
 /** Central config — keep in sync with backend/app/core/features.py */
 
+/** Preview mode: add ?preview=geheim123 to any URL to bypass the construction page.
+ *  Change this secret before going live! Set to '' to disable the gate. */
+export const PREVIEW_SECRET = 'geheim123';
+export const CONSTRUCTION_MODE = true; // Set to false to disable the gate entirely
+
 export const APP_URL = 'https://backend-production-9405.up.railway.app';
 
 export const tiers = [

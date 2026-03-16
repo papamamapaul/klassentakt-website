@@ -1,5 +1,5 @@
 ---
-import { APP_URL } from '../config';
+import { APP_URL, PREVIEW_SECRET, CONSTRUCTION_MODE } from '../config';
 
 interface Props {
   title: string;
@@ -19,6 +19,42 @@ const { title, description = 'KlassenTakt — Intelligente Stundenplanung für S
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <body class="min-h-screen bg-white text-gray-900 antialiased">
+    {CONSTRUCTION_MODE && (
+      <!-- Under Construction Gate -->
+      <div id="construction-gate" class="fixed inset-0 z-[9999] flex items-center justify-center bg-white">
+        <div class="max-w-md px-6 text-center">
+          <div class="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-blue-100">
+            <svg class="h-10 w-10 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+            </svg>
+          </div>
+          <h1 class="text-3xl font-bold text-gray-900">Wir bauen noch</h1>
+          <p class="mt-4 text-gray-600">KlassenTakt — Intelligente Stundenplanung für Schulen. Wir arbeiten mit Hochdruck an unserer Webseite.</p>
+          <p class="mt-6 text-sm text-gray-400">Bald verfügbar. Bleiben Sie gespannt!</p>
+          <a href={`${APP_URL}/register`} class="mt-6 inline-block rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-700">
+            Jetzt schon kostenlos testen
+          </a>
+        </div>
+      </div>
+      <script define:vars={{ PREVIEW_SECRET }}>
+        (function() {
+          const params = new URLSearchParams(window.location.search);
+          const secret = params.get('preview');
+          if (secret === PREVIEW_SECRET) {
+            document.cookie = 'kt_preview=1; path=/; max-age=86400';
+            // Remove param from URL without reload
+            params.delete('preview');
+            const clean = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+            window.history.replaceState({}, '', clean);
+          }
+          if (document.cookie.includes('kt_preview=1')) {
+            const gate = document.getElementById('construction-gate');
+            if (gate) gate.remove();
+          }
+        })();
+      </script>
+    )}
+
     <!-- Header -->
     <header class="border-b border-gray-100">
       <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
